@@ -11,6 +11,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
@@ -39,4 +41,21 @@ public class MemberController {
         memberService.join(member);
         return "redirect:/";
     }
+
+    @GetMapping("/members")
+    public String list(Model model) {
+        List<Member> members = memberService.findMembers();
+        model.addAttribute("members", members);
+        return "members/memberList";
+    }
 }
+
+/*
+    API를 만들 때는 절대 엔티티를 웹으로 반환하면 안된다.
+
+    멤버 엔티티에 필드를 하나 추가했는데 그게 패스워드라면 그게 그대로 노출된다. & API 스펙이 변한다
+
+    템플릿 엔진에서는 선택적으로 사용해도 된다.
+
+    가장 깔끔한건 DTO 등을 사용하는 것
+ */
